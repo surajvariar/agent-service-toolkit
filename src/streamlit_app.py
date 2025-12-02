@@ -88,7 +88,7 @@ async def main() -> None:
             agent_url = f"http://{host}:{port}"
         try:
             with st.spinner("Connecting to agent service..."):
-                st.session_state.agent_client = AgentClient(base_url=agent_url)
+                st.session_state.agent_client = AgentClient(base_url=agent_url,timeout=300.0)
         except AgentClientError as e:
             st.error(f"Error connecting to agent service at {agent_url}: {e}")
             st.markdown("The service might be booting up. Try again in a few seconds.")
