@@ -11,6 +11,7 @@ from agents.interrupt_agent import interrupt_agent
 from agents.knowledge_base_agent import kb_agent
 from agents.langgraph_supervisor_agent import langgraph_supervisor_agent
 from agents.langgraph_supervisor_hierarchy_agent import langgraph_supervisor_hierarchy_agent
+from agents.finance_aassistance import finance_assistance_agent
 from agents.lazy_agent import LazyLoadingAgent
 from agents.rag_assistant import rag_assistant
 from agents.research_assistant import research_assistant
@@ -60,6 +61,10 @@ agents: dict[str, Agent] = {
     "github-mcp-agent": Agent(
         description="A GitHub agent with MCP tools for repository management and development workflows.",
         graph_like=github_mcp_agent,
+    ),
+    "finance_assistance-agent": Agent(
+        description="A finance assistance agent with web search and financial analysis tools.",
+        graph_like=finance_assistance_agent,
     ),
 }
 
