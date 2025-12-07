@@ -120,7 +120,7 @@ async def main() -> None:
 
         if st.button(":material/chat: New Chat", use_container_width=True):
             st.session_state.messages = []
-            st.session_state.thread_id = str(uuid7)
+            st.session_state.thread_id = str(uuid7())
             st.rerun()
 
         with st.popover(":material/settings: Settings", use_container_width=True):
@@ -194,6 +194,8 @@ async def main() -> None:
             case "rag-assistant":
                 WELCOME = """Hello! I'm an AI-powered Company Policy & HR assistant with access to AcmeTech's Employee Handbook.
                 I can help you find information about benefits, remote work, time-off policies, company values, and more. Ask me anything!"""
+            case "finance_assistance-agent":
+                WELCOME = "💰 **Finance Investment Assistant**\n\nYour expert Indian investment analyst. Ask me to find the best stocks, ETFs, mutual funds, gold investments, or any other investment opportunity.\n\nI analyze real-time data and provide data-driven recommendations based on P/E ratios, ROE, CAGR, and other key metrics.\n\n**Ask me:** \"Best IT stock?\", \"Compare TCS vs Infosys?\", \"Best Gold ETF?\", etc.\n\n*Disclaimer: Not investment advice. Always do your own research.*"
             case _:
                 WELCOME = "Hello! I'm an AI agent. Ask me anything!"
 

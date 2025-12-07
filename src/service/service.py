@@ -5,8 +5,9 @@ import warnings
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 from typing import Annotated, Any
-from uuid import UUID, uuid4
+from uuid import UUID
 
+from langsmith import uuid7
 from fastapi import APIRouter, Depends, FastAPI, HTTPException, status
 from fastapi.responses import StreamingResponse
 from fastapi.routing import APIRoute
@@ -120,9 +121,9 @@ async def _handle_input(user_input: UserInput, agent: AgentGraph) -> tuple[dict[
     Parse user input and handle any required interrupt resumption.
     Returns kwargs for agent invocation and the run_id.
     """
-    run_id = uuid4()
-    thread_id = user_input.thread_id or str(uuid4())
-    user_id = user_input.user_id or str(uuid4())
+    run_id = UUID(str(uuid7()))
+    thread_id = user_input.thread_id or str(uuid7())
+    user_id = user_input.user_id or str(uuid7())
 
     configurable = {"thread_id": thread_id, "user_id": user_id}
     if user_input.model is not None:
