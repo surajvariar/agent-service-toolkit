@@ -221,8 +221,10 @@ async def main() -> None:
                     thread_id=st.session_state.thread_id,
                     user_id=user_id,
                 )
-                with st.spinner("Generating response..."):
-                    await draw_messages(stream, is_new=True)
+                # Create a status container for dynamic spinner updates
+                spinner_status = st.status("✨ Generating response...", state="running")
+                await draw_messages(stream, is_new=True, spinner_status=spinner_status)
+                spinner_status.update(state="complete")
             else:
                 response = await agent_client.ainvoke(
                     message=user_input,
@@ -246,6 +248,7 @@ async def main() -> None:
 async def draw_messages(
     messages_agen: AsyncGenerator[ChatMessage | str, None],
     is_new: bool = False,
+    spinner_status = None,
 ) -> None:
     """
     Draws a set of chat messages - either replaying existing messages
@@ -255,6 +258,7 @@ async def draw_messages(
     - Use a placeholder container to render streaming tokens as they arrive.
     - Use a status container to render tool calls. Track the tool inputs and outputs
       and update the status container accordingly.
+    - Dynamic spinner text based on message type (thinking for tool calls, generating for responses).
 
     The function also needs to track the last message container in session state
     since later messages can draw to the same container. This is also used for
@@ -263,6 +267,7 @@ async def draw_messages(
     Args:
         messages_aiter: An async iterator over messages to draw.
         is_new: Whether the messages are new or not.
+        spinner_status: Optional status container for dynamic spinner updates.
     """
 
     # Keep track of the last message container
@@ -272,6 +277,9 @@ async def draw_messages(
     # Placeholder for intermediate streaming tokens
     streaming_content = ""
     streaming_placeholder = None
+    
+    # Track current spinner text for dynamic updates
+    current_spinner_text = "✨ Generating response..."
 
     # Iterate over the messages and draw them
     while msg := await anext(messages_agen, None):
@@ -306,6 +314,16 @@ async def draw_messages(
                 # If we're rendering new messages, store the message in session state
                 if is_new:
                     st.session_state.messages.append(msg)
+
+                # Update spinner text dynamically based on whether this message has tool calls
+                if msg.tool_calls and current_spinner_text != "🤔 Thinking...":
+                    current_spinner_text = "🤔 Thinking..."
+                    if spinner_status is not None:
+                        spinner_status.update(label=current_spinner_text)
+                elif not msg.tool_calls and current_spinner_text != "✨ Generating response...":
+                    current_spinner_text = "✨ Generating response..."
+                    if spinner_status is not None:
+                        spinner_status.update(label=current_spinner_text)
 
                 # If the last message type was not AI, create a new chat message
                 if last_message_type != "ai":
