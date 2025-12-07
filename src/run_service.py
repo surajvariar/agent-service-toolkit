@@ -34,4 +34,5 @@ if __name__ == "__main__":
         port=settings.PORT,
         reload=settings.is_dev(),
         timeout_graceful_shutdown=settings.GRACEFUL_SHUTDOWN_TIMEOUT,
+        timeout_keep_alive=settings.KEEP_ALIVE_TIMEOUT,
     )

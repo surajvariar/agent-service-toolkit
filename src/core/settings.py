@@ -77,7 +77,7 @@ class Settings(BaseSettings):
     PORT: int = 8080
     GRACEFUL_SHUTDOWN_TIMEOUT: int = 30
     LOG_LEVEL: LogLevel = LogLevel.WARNING
-
+    KEEP_ALIVE_TIMEOUT: int = 120
     AUTH_SECRET: SecretStr | None = None
 
     OPENAI_API_KEY: SecretStr | None = None
