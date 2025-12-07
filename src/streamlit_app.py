@@ -1,7 +1,8 @@
 import asyncio
 import os
 import urllib.parse
-import uuid
+# import uuid
+from langsmith import uuid7
 from collections.abc import AsyncGenerator
 
 import streamlit as st
@@ -41,7 +42,7 @@ def get_or_create_user_id() -> str:
         return user_id
 
     # Generate a new user_id if not found
-    user_id = str(uuid.uuid4())
+    user_id = str(uuid7())
 
     # Store in session state for this session
     st.session_state[USER_ID_COOKIE] = user_id
@@ -98,7 +99,7 @@ async def main() -> None:
     if "thread_id" not in st.session_state:
         thread_id = st.query_params.get("thread_id")
         if not thread_id:
-            thread_id = str(uuid.uuid4())
+            thread_id = str(uuid7())
             messages = []
         else:
             try:
@@ -119,7 +120,7 @@ async def main() -> None:
 
         if st.button(":material/chat: New Chat", use_container_width=True):
             st.session_state.messages = []
-            st.session_state.thread_id = str(uuid.uuid4())
+            st.session_state.thread_id = str(uuid7)
             st.rerun()
 
         with st.popover(":material/settings: Settings", use_container_width=True):
@@ -218,7 +219,8 @@ async def main() -> None:
                     thread_id=st.session_state.thread_id,
                     user_id=user_id,
                 )
-                await draw_messages(stream, is_new=True)
+                with st.spinner("Generating response..."):
+                    await draw_messages(stream, is_new=True)
             else:
                 response = await agent_client.ainvoke(
                     message=user_input,

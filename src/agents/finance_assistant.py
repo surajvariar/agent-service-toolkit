@@ -1,7 +1,7 @@
 from core import get_model, settings
 from agents.tools import *
-
-model = get_model(settings.DEFAULT_MODEL)
+from langchain.agents import create_agent
+from typing import Any
 
 MAIN_SYSTEM_PROMPT = """You are an expert Indian financial analyst assistant. Your only job is to recommend the SINGLE BEST investment (stock, ETF, mutual fund, gold, etc.) based on the user's request.
 
@@ -72,16 +72,12 @@ NEVER guess ticker symbols — always search first.
 Start now and wait for user query.
 """
 
-from langchain.agents import create_agent
-
-agent=create_agent(
+model = get_model(settings.DEFAULT_MODEL)
+agent = create_agent(
     model=model,
+    tools=[get_pe_ratio, get_cagr, get_roe, get_debt_equity_ratio, internet_search],
     system_prompt=MAIN_SYSTEM_PROMPT,
-    tools=[internet_search,
-            get_cagr,
-            get_roe,
-            get_pe_ratio,
-            get_debt_equity_ratio]
 )
+
 
 finance_assistance_agent = agent

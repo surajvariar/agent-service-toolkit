@@ -98,7 +98,7 @@ def internet_search(query: str, max_results: int = 5) -> str:
         String representation of search results
     """
     tavily_client = TavilyClient(api_key=os.environ.get("TAVILY_API_KEY"))
-    results = tavily_client.search(query, max_results=max_results, include_raw_content=True)
+    results = tavily_client.search(query, max_results=max_results, include_raw_content=False)
     return str(results)
 
 

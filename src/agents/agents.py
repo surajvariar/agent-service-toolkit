@@ -11,7 +11,7 @@ from agents.interrupt_agent import interrupt_agent
 from agents.knowledge_base_agent import kb_agent
 from agents.langgraph_supervisor_agent import langgraph_supervisor_agent
 from agents.langgraph_supervisor_hierarchy_agent import langgraph_supervisor_hierarchy_agent
-from agents.finance_aassistance import finance_assistance_agent
+from agents.finance_assistant import finance_assistance_agent
 from agents.lazy_agent import LazyLoadingAgent
 from agents.rag_assistant import rag_assistant
 from agents.research_assistant import research_assistant
